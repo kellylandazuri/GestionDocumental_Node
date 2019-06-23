@@ -12,6 +12,7 @@ Separar los documentos en las carpetas adecuadas:
   Archivos de documentos referentes al proyecto, subdivididos en carpetas específicas.
 
 ## Guía de Código
+
 El código deberá ser realizado en Ingles.
 Las constantes son completamente en mayúscula y hace uso de snake_case (HOLA_MUNDO).
 Las clases y atributos son sustantivos.
@@ -43,5 +44,7 @@ Se haran uso de los siguientes servicios en la nube:
 - Una unidad de EBS de 10 GB de tipo gp2. El coste sera de unos 2 dolares en el mes.
 
 - Uso de servicio de DynamoDB con una capacidad de 250MB y una posible cantidad de un 1 millon de operaciones al mes. El costo sera de una 8 dolares en el mes.
+
+- Uso de amazon S3 para almacenamiento. Se espera hacer uso de un maximo de 2 GB y no mas de 10000 peticiones en el mes. Se espera un costo de 0.15 dolares.
 
 Todos los costos se estimaron con Montly Cost Calculator de AWS.
