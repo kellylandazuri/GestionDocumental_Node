@@ -15,6 +15,14 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
-    "express": "^4.17.1"
+    "aws-sdk": "^2.481.0",
+    "connect-form": "^0.2.1",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "formidable": "^1.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "multiparty": "^4.2.1",
+    "stream": "0.0.2"
   }
 }
