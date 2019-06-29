@@ -1,0 +1,35 @@
+{
+	"DOCUMENTFOLDER":{
+		"PATH": "String", //IT IS ALSO THE KEY
+		"CURRENT_VERSIONID":"String",
+		"CLIENT_COMPANYID": "String",
+		"USERNAME":"String",
+		"NAME": "String",
+		"ACCESS_DATE": "Date",//FOR DOWNLOADS
+		"MODIFICATION_DATE":"Date",//FOR UPDATES AND DELETES
+		"CREATION_DATE":"Date",
+		"DELETED_DATE": "Date",
+		"SIZE": "Decimal128",//SIZE IN BYTES AND ONLY FOR DOCUMENTS
+		"FORMAT": "String",
+		"STATE": "String",
+		"TYPE": "String",//COULD BE DOCUMENT OR A FOLDER
+		"PATH_FATHER": "String",
+		"PERMISSIONS":[
+			{
+				"PERMISSION":{
+					"USERNAME": "String",
+					"PERMISSION": "String" //COULD BE FOR DOWNLOAD,UPDATE,DELETE,  (SET PERMISSIONS)*-> *NOT DECIDED YET
+				}
+			}
+		],
+		"ACTION_HISTORY":[
+			{
+				"ACTION":{
+					"USERNAME": "String",
+					"ACTION": "String",
+					"ACTION_DATE": "String"
+				}
+			}
+		]
+	}
+}
