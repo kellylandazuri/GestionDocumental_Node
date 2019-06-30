@@ -1,6 +1,7 @@
 //All routes are described here
 'use strict';
 module.exports = function(app) {
+    var formidable = require('express-formidable');
     var controller = require('../controllers/docManagementController');
     var auth = require('../auth/auth');
     // todoList Routes
@@ -10,5 +11,5 @@ module.exports = function(app) {
       .get(controller.getDocumentFolder);
     app.route('/documentfolder')
       .post(controller.createFatherFolder)
-      .put(controller.putDocumentFolder);
+      .put(formidable(),controller.putDocumentFolder);
 };
