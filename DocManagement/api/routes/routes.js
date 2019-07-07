@@ -7,9 +7,12 @@ module.exports = function(app) {
     // todoList Routes
     app.route('/holaMundo')
       .get(auth.isAuthenticated,controller.helloWorld);
-    app.route('/documentfolder/:path/:versionId')
-      .get(controller.getDocumentFolder);
-    app.route('/documentfolder')
+    app.route('/documentfolder/:path/:userid')
+      .get(controller.getDocumentFolder)
+      .delete(controller.deleteDocumentFolder);
+    app.route('/documentfolderversion/:path/:userid')
+      .get(controller.getDocumentFolderVersions);
+    app.route('/documentfolder/:userid')
       .post(controller.createFatherFolder)
       .put(formidable(),controller.putDocumentFolder);
 };
