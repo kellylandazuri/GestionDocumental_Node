@@ -8,36 +8,73 @@ var docClient = new AWS2.DynamoDB.DocumentClient(new AWS2.Endpoint("https://dyna
 
 var table = process.env.DYNAMOTABLE;
 
+exports.getDocumentFolderFromDB = function(key, callback) {
+    var params = {
+        TableName: table,
+        Key: {
+            "DOCUMENTPATH": key,
+        }
+    };
+    docClient.get(params, function(err, dataDynamo) {
+        if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+            callback(err, null);
+        } else {
+            console.log("GetItem succeeded:", JSON.stringify(dataDynamo, null, 2));
+            callback(null, dataDynamo);
+        }
+    });
+}
+
 exports.putDocumentFolderToDB = function(data, callback) {
     var params = {
         TableName: table,
         Item: {
-            "DOCUMENTPATH": data.documentpath,
+            "DOCUMENTPATH": data.DOCUMENTPATH,
             "INFO": {
-                "PATH": data.documentpath,
-                "CURRENT_VERSIONID": data.versionId,
-                "CLIENT_COMPANYID": data.companyId,
-                "USERID": data.userId,
-                "NAME": data.name,
-                "ACCESS_DATE": data.accessDate, //FOR DOWNLOADS
-                "MODIFICATION_DATE": data.modificationDate, //FOR UPDATES AND DELETES
-                "CREATION_DATE": data.creationDate,
-                "DELETED_DATE": data.deletedDate,
-                "SIZE": data.size, //SIZE IN BYTES AND ONLY FOR DOCUMENTS
-                "FORMAT": data.format,
-                "STATE": data.state,
-                "TYPE": data.type, //COULD BE DOCUMENT OR A FOLDER
-                "PATH_FATHER": data.pathFather,
-                "ACTION_HISTORY": data.actions
+                "PATH": data.DOCUMENTPATH,
+                "CURRENT_VERSIONID": data.CURRENT_VERSIONID,
+                "CLIENT_COMPANYID": data.CLIENT_COMPANYID,
+                "USERID": data.USERID,
+                "NAME": data.NAME,
+                "ACCESS_DATE": data.ACCESS_DATE, //FOR DOWNLOADS
+                "MODIFICATION_DATE": data.MODIFICATION_DATE, //FOR UPDATES AND DELETES
+                "CREATION_DATE": data.CREATION_DATE,
+                "DELETED_DATE": data.DELETED_DATE,
+                "SIZE": data.SIZE, //SIZE IN BYTES AND ONLY FOR DOCUMENTS
+                "FORMAT": data.FORMAT,
+                "STATE": data.STATE,
+                "TYPE": data.TYPE, //COULD BE DOCUMENT OR A FOLDER
+                "PATH_FATHER": data.PATH_FATHER,
+                "ACTION_HISTORY": data.ACTION_HISTORY
             }
         }
     }
-    docClient.put(params, function(err, data) {
+    docClient.put(params, function(err, dataDynamo) {
         if (err) {
             console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
             callback(err, null);
         } else {
-            console.log("Added item:", JSON.stringify(data, null, 2));
+            console.log("Added item:", JSON.stringify(dataDynamo, null, 2));
+            callback(null, dataDynamo);
+        }
+    });
+
+}
+
+exports.deteleDocumentFolderFromDB = function(key, callback) {
+    var params = {
+        TableName: table,
+        Key: {
+            "DOCUMENTPATH": key,
+        }
+    };
+    docClient.delete(params, function(err, data) {
+        if (err) {
+            console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
+            callback(err, null);
+        } else {
+            console.log("DeleteItem succeeded:", JSON.stringify(data, null, 2));
             callback(null, data);
         }
     });
@@ -84,13 +121,13 @@ exports.getDocumentFolderByState = function(data, callback) {
     });
 }
 
-exports.getPermissionsByDocumentFolder = function(name, callback) {
+exports.getPermissionsByDocumentFolder = function(key, callback) {
     var params = {
         TableName: table,
         ProjectionExpression: "PERMISSIONS",
-        KeyConditionExpression: "path=:name ",
+        KeyConditionExpression: "DOCUMENTPATH=:key ",
         ExpressionAttributeValues: {
-            "name": name
+            "key": key
         }
     }
     docClient.query(params, function(err, data) {
@@ -102,15 +139,29 @@ exports.getPermissionsByDocumentFolder = function(name, callback) {
     });
 }
 
-exports.deleteDocumentFolder = function(name, state, callback) {
+exports.deleteDocumentFolder = function(key, state, callback) {
     var params = {
         TableName: table,
         Key: {
-            path: name
+            "DOCUMENTPATH": key,
         },
         UpdateExpression: "set STATE = :state",
         ExpressionAttributeValues: {
             ":state": state
+        },
+        ReturnValues: "UPDATED_NEW"
+    };
+    docClient.update(params, callback);
+}
+exports.updatePermissionsByDocumentFolder = function(key, permList, callback) {
+    var params = {
+        TableName: table,
+        Key: {
+            "DOCUMENTPATH": key,
+        },
+        UpdateExpression: "set PERMISSIONS = :permList",
+        ExpressionAttributeValues: {
+            ":permList": permList
         },
         ReturnValues: "UPDATED_NEW"
     };
