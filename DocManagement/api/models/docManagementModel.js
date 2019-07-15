@@ -81,7 +81,7 @@ exports.deteleDocumentFolderFromDB = function(key, callback) {
 }
 
 
-exports.getDocumentFolderByBussines = function(data, callback) {
+exports.getDocumentFolderByCompany = function(data, callback) {
     var params = {
         TableName: table,
         KeyConditionExpression: "companyId = :bs",
@@ -164,6 +164,35 @@ exports.updatePermissionsByDocumentFolder = function(key, permList, callback) {
             ":permList": permList
         },
         ReturnValues: "UPDATED_NEW"
+    };
+    docClient.update(params, callback);
+}
+exports.updatePermissionsByDocumentFolder = function(key, permList, callback) {
+    var params = {
+        TableName: table,
+        Key: {
+            "DOCUMENTPATH": key,
+        },
+        UpdateExpression: "set PERMISSIONS = :permList",
+        ExpressionAttributeValues: {
+            ":permList": permList
+        },
+        ReturnValues: "UPDATED_NEW"
+    };
+    docClient.update(params, callback);
+}
+
+exports.activateVersion = function(key, versionId, callback) {
+    var params = {
+        TableName: table,
+        Key: {
+            "DOCUMENTPATH": key,
+        },
+        UpdateExpression: "set CURRENT_VERSIONID = :versionId",
+        ExpressionAttributeValues: {
+            ":versionId": versionId
+        },
+        ReturnValues: "UPDATED"
     };
     docClient.update(params, callback);
 }

@@ -6,13 +6,19 @@ module.exports = function(app) {
     var auth = require('../auth/auth');
     // todoList Routes
     app.route('/holaMundo')
-      .get(auth.isAuthenticated,controller.helloWorld);
+        .get(auth.isAuthenticated, controller.helloWorld);
     app.route('/documentfolder/:path/:userid')
-      .get(controller.getDocumentFolder)
-      .delete(controller.deleteDocumentFolder);
+        .get(controller.getDocumentFolder)
+        .delete(controller.deleteDocumentFolder);
     app.route('/documentfolderversion/:path/:userid')
-      .get(controller.getDocumentFolderVersions);
+        .get(controller.getDocumentFolderVersions);
     app.route('/documentfolder/:userid')
-      .post(controller.createFatherFolder)
-      .put(formidable(),controller.putDocumentFolder);
+        .post(controller.createFatherFolder)
+        .put(formidable(), controller.putDocumentFolder);
+    app.route('/documentfolder/:companyid')
+        .get(controller.getDocumentFolderByCompany);
+    app.route('/documentfolder/:state')
+        .get(controller.getDocumentFolderByState);
+    app.route("/documentfolder/:path")
+        .put(controller.putRemoveDocumentFolder);
 };
