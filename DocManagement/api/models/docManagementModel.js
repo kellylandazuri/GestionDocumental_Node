@@ -84,10 +84,7 @@ exports.deteleDocumentFolderFromDB = function(key, callback) {
 exports.getDocumentFolderByCompany = function(companyId, callback) {
     var params = {
         TableName: table,
-        FilterExpression: '#bs=:CLIENT_COMPANYID',
-        ExpressionAttributeNames: {
-            "#bs": "INFO.CLIENT_COMPANYID"
-        },
+        FilterExpression: 'INFO.CLIENT_COMPANYID=:CLIENT_COMPANYID',
         ExpressionAttributeValues: {
             ":CLIENT_COMPANYID": companyId
         }
@@ -116,8 +113,8 @@ exports.getDocumentFolderByState = function(companyId, state, callback) {
         },
         FilterExpression: '#bs=:CLIENT_COMPANYID AND #st=:STATE',
         ExpressionAttributeNames: {
-            "#bs": "CLIENT_COMPANYID",
-            "#st": "STATE"
+            "#bs": "INFO.CLIENT_COMPANYID",
+            "#st": "INFO.STATE"
         }
     }
     docClient.scan(params, function(err, data) {
@@ -140,16 +137,22 @@ exports.getDocumentFolderByState = function(companyId, state, callback) {
 exports.getPermissionsByDocumentFolder = function(key, callback) {
     var params = {
         TableName: table,
-        ProjectionExpression: "PERMISSIONS",
+        ProjectionExpression: "#pr",
         Key: {
             "DOCUMENTPATH": key,
         },
+        ExpressionAttributeNames: {
+            "#pr": "INFO.PERMISSIONS"
+        }
     }
-    docClient.query(params, function(err, data) {
+    docClient.scan(params, function(err, data) {
         if (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+            callback(err, null);
         } else {
-            console.log("Query succeeded.");
+            if (data.Items.length > 0)
+                console.log("Query succeeded.");
+            callback(null, data);
         }
     });
 }
@@ -161,9 +164,9 @@ exports.deleteDocumentFolder = function(key, st, callback) {
         Key: {
             "DOCUMENTPATH": key,
         },
-        UpdateExpression: "set #st = :STATE",
+        UpdateExpression: "set #st = :st",
         ExpressionAttributeValues: {
-            ":STATE": st
+            ":st": st
         },
         ExpressionAttributeNames: {
             "#st": "INFO.STATE"

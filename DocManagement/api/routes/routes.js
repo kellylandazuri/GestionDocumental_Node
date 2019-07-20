@@ -8,7 +8,7 @@ module.exports = function(app) {
     app.route('/holaMundo')
         .get(auth.isAuthenticated, controller.helloWorld);
     app.route('/documentfolder/:path/:userid')
-        // .get(controller.getDocumentFolder)
+        //.get(controller.getDocumentFolder)
         .delete(controller.deleteDocumentFolder);
     app.route('/documentfolderversion/:path/:userid')
         .get(controller.getDocumentFolderVersions);
