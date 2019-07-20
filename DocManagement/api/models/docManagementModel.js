@@ -111,11 +111,7 @@ exports.getDocumentFolderByState = function(companyId, state, callback) {
             ":CLIENT_COMPANYID": companyId,
             ":STATE": state
         },
-        FilterExpression: '#bs=:CLIENT_COMPANYID AND #st=:STATE',
-        ExpressionAttributeNames: {
-            "#bs": "INFO.CLIENT_COMPANYID",
-            "#st": "INFO.STATE"
-        }
+        FilterExpression: 'INFO.CLIENT_COMPANYID=:CLIENT_COMPANYID AND INFO.STATET=:STATE',
     }
     docClient.scan(params, function(err, data) {
         if (err) {
@@ -164,12 +160,9 @@ exports.deleteDocumentFolder = function(key, st, callback) {
         Key: {
             "DOCUMENTPATH": key,
         },
-        UpdateExpression: "set #st = :st",
+        UpdateExpression: "set INFO.STATET = :st",
         ExpressionAttributeValues: {
             ":st": st
-        },
-        ExpressionAttributeNames: {
-            "#st": "INFO.STATE"
         },
         ReturnValues: "UPDATED_NEW"
     };
