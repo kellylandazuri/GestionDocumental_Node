@@ -165,12 +165,8 @@ exports.deleteDocumentFolder = function(req, res) {
 }
 
 exports.putRemoveDocumentFolder = function(req, res) {
-    var params = {
-        Body: fs.readFileSync(req.files.document.path),
-        Bucket: process.env.BUCKET,
-        Key: req.fields.fileName
-    };
-    model.deleteDocumentFolder(req.params.path, "INV", function(errDynamo, dataDynamo) {
+    console.log(req.params.path)
+    model.deleteDocumentFolder(req.params.path, "ICT", function(errDynamo, dataDynamo) {
         if (errDynamo) {
             res.json(errDynamo.stack);
         } else {
@@ -180,11 +176,8 @@ exports.putRemoveDocumentFolder = function(req, res) {
 
 }
 exports.getDocumentFolderByCompany = function(req, res) {
-    var params = {
-        Bucket: process.env.BUCKET,
-        Key: req.params.path
-    };
-    model.getDocumentFolderByCompany(params, function(err, data) {
+    console.log("COMPANIA:" + req.params.companyId);
+    model.getDocumentFolderByCompany(req.params.companyId, function(err, data) {
         if (err) {
             console.log(err, err.stack);
             res.json(err.stack);
@@ -195,11 +188,39 @@ exports.getDocumentFolderByCompany = function(req, res) {
     });
 }
 exports.getDocumentFolderByState = function(req, res) {
+    model.getDocumentFolderByState(req.params.companyId, req.params.state, function(err, data) {
+        if (err) {
+            console.log(err, err.stack);
+            res.json(err.stack);
+        } else {
+            console.log(data);
+            res.json(data);
+        }
+    });
+}
+
+exports.getPermissionsByDocumentFolder = function(req, res) {
     var params = {
         Bucket: process.env.BUCKET,
         Key: req.params.path
     };
-    model.getDocumentFolderByState(params, function(err, data) {
+    model.getPermissionsByDocumentFolder(req.params.path, function(err, data) {
+        if (err) {
+            console.log(err, err.stack);
+            res.json(err.stack);
+        } else {
+            console.log(data);
+            res.json(data);
+        }
+    });
+}
+
+exports.activateVersion = function(req, res) {
+    var params = {
+        Bucket: process.env.BUCKET,
+        Key: req.params.path
+    };
+    model.activateVersion(req.params.path, req.params.VersionId, function(err, data) {
         if (err) {
             console.log(err, err.stack);
             res.json(err.stack);

@@ -81,42 +81,58 @@ exports.deteleDocumentFolderFromDB = function(key, callback) {
 }
 
 
-exports.getDocumentFolderByCompany = function(data, callback) {
+exports.getDocumentFolderByCompany = function(companyId, callback) {
     var params = {
         TableName: table,
-        KeyConditionExpression: "companyId = :bs",
+        FilterExpression: '#bs=:CLIENT_COMPANYID',
+        ExpressionAttributeNames: {
+            "#bs": "INFO.CLIENT_COMPANYID"
+        },
         ExpressionAttributeValues: {
-            ":bs": data.companyId
+            ":CLIENT_COMPANYID": companyId
         }
     }
-    docClient.query(params, function(err, data) {
+    docClient.scan(params, function(err, data) {
         if (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+            callback(err, null);
         } else {
-            console.log("Query succeeded.");
-            data.Items.forEach(function(item) {
-                console.log(" -", item.NAME + ": " + item.state);
-            });
+            if (data != null) {
+                console.log("Query succeeded.", companyId, data.Items.length);
+                data.Items.forEach(function(item) {
+                    console.log(" -", item.NAME + ": " + item.state);
+                });
+            }
+            callback(null, data);
         }
     });
 }
-exports.getDocumentFolderByState = function(data, callback) {
+exports.getDocumentFolderByState = function(companyId, state, callback) {
     var params = {
         TableName: table,
-        KeyConditionExpression: "companyId = :bs and  state = :st ",
         ExpressionAttributeValues: {
-            ":bs": data.companyId,
-            ":st": data.state
+            ":CLIENT_COMPANYID": companyId,
+            ":STATE": state
+        },
+        FilterExpression: '#bs=:CLIENT_COMPANYID AND #st=:STATE',
+        ExpressionAttributeNames: {
+            "#bs": "CLIENT_COMPANYID",
+            "#st": "STATE"
         }
     }
-    docClient.query(params, function(err, data) {
+    docClient.scan(params, function(err, data) {
         if (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
         } else {
-            console.log("Query succeeded.");
-            data.Items.forEach(function(item) {
-                console.log(" -", item.NAME + ": " + item.state);
-            });
+            if (data != null) {
+                console.log("Query succeeded.", companyId, state, data.Items.length);
+                data.Items.forEach(function(item) {
+                    console.log(" -", item.NAME + ": " + item.state);
+                });
+            }
+            callback(null, data);
+
+
         }
     });
 }
@@ -125,10 +141,9 @@ exports.getPermissionsByDocumentFolder = function(key, callback) {
     var params = {
         TableName: table,
         ProjectionExpression: "PERMISSIONS",
-        KeyConditionExpression: "DOCUMENTPATH=:key ",
-        ExpressionAttributeValues: {
-            "key": key
-        }
+        Key: {
+            "DOCUMENTPATH": key,
+        },
     }
     docClient.query(params, function(err, data) {
         if (err) {
@@ -139,34 +154,25 @@ exports.getPermissionsByDocumentFolder = function(key, callback) {
     });
 }
 
-exports.deleteDocumentFolder = function(key, state, callback) {
+exports.deleteDocumentFolder = function(key, st, callback) {
+    console.log(key, st)
     var params = {
         TableName: table,
         Key: {
             "DOCUMENTPATH": key,
         },
-        UpdateExpression: "set STATE = :state",
+        UpdateExpression: "set #st = :STATE",
         ExpressionAttributeValues: {
-            ":state": state
+            ":STATE": st
+        },
+        ExpressionAttributeNames: {
+            "#st": "INFO.STATE"
         },
         ReturnValues: "UPDATED_NEW"
     };
     docClient.update(params, callback);
 }
-exports.updatePermissionsByDocumentFolder = function(key, permList, callback) {
-    var params = {
-        TableName: table,
-        Key: {
-            "DOCUMENTPATH": key,
-        },
-        UpdateExpression: "set PERMISSIONS = :permList",
-        ExpressionAttributeValues: {
-            ":permList": permList
-        },
-        ReturnValues: "UPDATED_NEW"
-    };
-    docClient.update(params, callback);
-}
+
 exports.updatePermissionsByDocumentFolder = function(key, permList, callback) {
     var params = {
         TableName: table,
