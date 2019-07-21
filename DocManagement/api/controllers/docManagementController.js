@@ -227,11 +227,7 @@ exports.putPermissionsByDocumentFolder = function(req, res) {
 }
 
 exports.activateVersion = function(req, res) {
-    var params = {
-        Bucket: process.env.BUCKET,
-        Key: req.params.path
-    };
-    model.activateVersion(req.params.path, req.params.VersionId, function(err, data) {
+    model.activateVersion(req.params.path, req.params.versionId, function(err, data) {
         if (err) {
             console.log(err, err.stack);
             res.json(err.stack);

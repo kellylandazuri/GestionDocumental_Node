@@ -24,4 +24,6 @@ module.exports = function(app) {
         .get(controller.getPermissionsByDocumentFolder);
     app.route("/documentfolderPermission/:path")
         .put(controller.putPermissionsByDocumentFolder)
+    app.route("/documentfolderPermission/:path/versionActive/:versionId")
+        .put(controller.putPermissionsByDocumentFolder)
 };
