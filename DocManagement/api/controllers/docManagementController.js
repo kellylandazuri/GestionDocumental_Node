@@ -214,6 +214,17 @@ exports.getPermissionsByDocumentFolder = function(req, res) {
         }
     });
 }
+exports.putPermissionsByDocumentFolder = function(req, res) {
+    console.log(req.params.path);
+    model.updatePermissionsByDocumentFolder(req.params.path, req.body.PERMISSIONSS, function(errDynamo, dataDynamo) {
+        if (errDynamo) {
+            res.json(errDynamo.stack);
+        } else {
+            res.json(dataDynamo);
+        }
+    });
+
+}
 
 exports.activateVersion = function(req, res) {
     var params = {

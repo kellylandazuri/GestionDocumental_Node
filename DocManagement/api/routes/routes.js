@@ -14,7 +14,7 @@ module.exports = function(app) {
         .get(controller.getDocumentFolderVersions);
     app.route('/documentfolder/:userid')
         .post(controller.createFatherFolder)
-        .put(formidable(), controller.putDocumentFolder);
+        .put(controller.putDocumentFolder);
     app.route('/documentfolder/company/:companyId')
         .get(controller.getDocumentFolderByCompany);
     app.route('/documentfolder/:companyId/state/:state')
@@ -22,5 +22,6 @@ module.exports = function(app) {
     app.route("/documentfolder/path/:path")
         .put(formidable(), controller.putRemoveDocumentFolder)
         .get(controller.getPermissionsByDocumentFolder);
-
+    app.route("/documentfolderPermission/:path")
+        .put(controller.putPermissionsByDocumentFolder)
 };

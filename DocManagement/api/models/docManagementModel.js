@@ -138,7 +138,7 @@ exports.getPermissionsByDocumentFolder = function(key, callback) {
             "DOCUMENTPATH": key,
         },
         ExpressionAttributeNames: {
-            "#pr": "INFO.PERMISSIONS"
+            "#pr": "INFO.PERMISSIONSS"
         }
     }
     docClient.scan(params, function(err, data) {
@@ -170,12 +170,13 @@ exports.deleteDocumentFolder = function(key, st, callback) {
 }
 
 exports.updatePermissionsByDocumentFolder = function(key, permList, callback) {
+    console.log(permList)
     var params = {
         TableName: table,
         Key: {
             "DOCUMENTPATH": key,
         },
-        UpdateExpression: "set PERMISSIONS = :permList",
+        UpdateExpression: "set INFO.PERMISSIONSS = :permList",
         ExpressionAttributeValues: {
             ":permList": permList
         },
@@ -190,7 +191,7 @@ exports.activateVersion = function(key, versionId, callback) {
         Key: {
             "DOCUMENTPATH": key,
         },
-        UpdateExpression: "set CURRENT_VERSIONID = :versionId",
+        UpdateExpression: "set INFO.CURRENT_VERSIONID = :versionId",
         ExpressionAttributeValues: {
             ":versionId": versionId
         },
