@@ -133,12 +133,9 @@ exports.getDocumentFolderByState = function(companyId, state, callback) {
 exports.getPermissionsByDocumentFolder = function(key, callback) {
     var params = {
         TableName: table,
-        ProjectionExpression: "#pr",
+        ProjectionExpression: "INFO.PERMISSIONSS",
         Key: {
             "DOCUMENTPATH": key,
-        },
-        ExpressionAttributeNames: {
-            "#pr": "INFO.PERMISSIONSS"
         }
     }
     docClient.scan(params, function(err, data) {
