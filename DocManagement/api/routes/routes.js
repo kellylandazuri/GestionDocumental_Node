@@ -8,22 +8,22 @@ module.exports = function(app) {
     app.route('/holaMundo')
         .get(auth.isAuthenticated, controller.helloWorld);
     app.route('/documentfolder/:path/:userid')
-        //.get(controller.getDocumentFolder)
+        .get(controller.getDocumentFolder)
         .delete(controller.deleteDocumentFolder);
     app.route('/documentfolderversion/:path/:userid')
         .get(controller.getDocumentFolderVersions);
     app.route('/documentfolder/:userid')
         .post(controller.createFatherFolder)
-        .put(controller.putDocumentFolder);
+        .put(formidable(),controller.putDocumentFolder);
     app.route('/documentfolder/company/:companyId')
         .get(controller.getDocumentFolderByCompany);
     app.route('/documentfolder/:companyId/state/:state')
         .get(controller.getDocumentFolderByState);
-    app.route("/documentfolder/path/:path")
-        .put(formidable(), controller.putRemoveDocumentFolder)
-        .get(controller.getPermissionsByDocumentFolder);
+    app.route("/documentfolder/remove/:path")
+        .put(controller.putRemoveDocumentFolder);
     app.route("/documentfolderPermission/:path")
-        .put(controller.putPermissionsByDocumentFolder)
-    app.route("/documentfolderPermission/:path/versionActive/:versionId")
-        .put(controller.putPermissionsByDocumentFolder)
+        .get(controller.getPermissionsByDocumentFolder)
+        .put(controller.putPermissionsByDocumentFolder);
+    app.route("/documentfolder/:path/versionActive/:versionId")
+        .put(controller.activateVersion);
 };

@@ -43,7 +43,7 @@ exports.putDocumentFolderToDB = function(data, callback) {
                 "DELETED_DATE": data.DELETED_DATE,
                 "SIZE": data.SIZE, //SIZE IN BYTES AND ONLY FOR DOCUMENTS
                 "FORMAT": data.FORMAT,
-                "STATE": data.STATE,
+                "STATET": data.STATET,
                 "TYPE": data.TYPE, //COULD BE DOCUMENT OR A FOLDER
                 "PATH_FATHER": data.PATH_FATHER,
                 "ACTION_HISTORY": data.ACTION_HISTORY

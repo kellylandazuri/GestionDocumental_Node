@@ -79,6 +79,7 @@ exports.putDocumentFolder = function(req, res) {
     }
 }
 exports.getDocumentFolder = function(req, res) {
+    console.log(req.params.path);
     model.getDocumentFolderFromDB(req.params.path, function(errDynamo, dataDynamo) {
         if (errDynamo) {
             res.send(errDynamo);
@@ -101,6 +102,7 @@ exports.getDocumentFolder = function(req, res) {
                     console.log("inside httpDone");
                     file.end();
                     var dbData = dataDynamo.Item.INFO;
+                    console.log(dbData);
                     dbData.DOCUMENTPATH = dbData.PATH;
                     dbData.ACCESS_DATE = (new Date()).toISOString();
                     dbData.ACTION_HISTORY.push({ "USERID": req.params.userid, "ACTION": "DOWNLOADED", "ACTION_DATE": (new Date()).toISOString() });
@@ -114,6 +116,7 @@ exports.getDocumentFolder = function(req, res) {
                 }).
                 send(function() {
                     console.log("inside send");
+                    console.log(dataDynamo.Item.INFO.NAME);
                     res.setHeader('Content-disposition', 'attachment; filename=' + dataDynamo.Item.INFO.NAME);
                     res.setHeader('Content-type', mime.getType(filePath));
                     res.setHeader('Transfer-Encoding', 'chunked');
