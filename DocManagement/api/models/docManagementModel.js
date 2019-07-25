@@ -27,6 +27,7 @@ exports.getDocumentFolderFromDB = function(key, callback) {
 }
 
 exports.putDocumentFolderToDB = function(data, callback) {
+    console.log(data);
     var params = {
         TableName: table,
         Item: {
@@ -52,8 +53,8 @@ exports.putDocumentFolderToDB = function(data, callback) {
     }
     docClient.put(params, function(err, dataDynamo) {
         if (err) {
-            console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-            callback(err, null);
+            console.error("Unable to add item. Error JSON:", JSON.stringify(err.stack, null, 2));
+            callback(err.stack, null);
         } else {
             console.log("Added item:", JSON.stringify(dataDynamo, null, 2));
             callback(null, dataDynamo);
@@ -192,7 +193,7 @@ exports.activateVersion = function(key, versionId, callback) {
         ExpressionAttributeValues: {
             ":versionId": versionId
         },
-        ReturnValues: "UPDATED"
+        ReturnValues: "UPDATED_NEW"
     };
     docClient.update(params, callback);
 }

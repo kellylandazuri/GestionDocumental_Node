@@ -39,7 +39,7 @@ exports.createFatherFolder = function(req, res) {
     });
 }
 exports.putDocumentFolder = function(req, res) {
-    if (req.files.document != null) {
+    if (req.files.document!=null) {
         console.log(req);
         var params = {
             Body: fs.readFileSync(req.files.document.path),
@@ -69,6 +69,7 @@ exports.putDocumentFolder = function(req, res) {
         });
     } else {
         console.log(req);
+        console.log("Creación de Carpeta");
         model.putDocumentFolderToDB(req.fields, function(errDynamo, dataDynamo) {
             if (errDynamo) {
                 res.json(errDynamo.stack);
@@ -169,7 +170,7 @@ exports.deleteDocumentFolder = function(req, res) {
 
 exports.putRemoveDocumentFolder = function(req, res) {
     console.log(req.params.path)
-    model.deleteDocumentFolder(req.params.path, "ICT", function(errDynamo, dataDynamo) {
+    model.deleteDocumentFolder(req.params.path, req.params.state , function(errDynamo, dataDynamo) {
         if (errDynamo) {
             res.json(errDynamo.stack);
         } else {

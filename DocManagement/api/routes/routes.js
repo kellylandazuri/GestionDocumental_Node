@@ -19,7 +19,7 @@ module.exports = function(app) {
         .get(controller.getDocumentFolderByCompany);
     app.route('/documentfolder/:companyId/state/:state')
         .get(controller.getDocumentFolderByState);
-    app.route("/documentfolder/remove/:path")
+    app.route("/documentfolder/remove/:path/state/:state")
         .put(controller.putRemoveDocumentFolder);
     app.route("/documentfolderPermission/:path")
         .get(controller.getPermissionsByDocumentFolder)
